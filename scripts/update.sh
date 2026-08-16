@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash 
 #
 # Custom update script invoked by .github/workflows/daily-update.yml
 #
