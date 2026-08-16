@@ -2,13 +2,13 @@
 # Daily automated update
 #
 # Runs a custom update script on a schedule, and if it produced any changes,
-# pushes them to a dedicated branch, opens a PR, and auto-merges it into main.
+# pushes them to a dedicated branch, opens a PR, and auto-merges it into master.
 #
 # Requirements:
 #   - Settings > Actions > General > Workflow permissions:
 #       "Read and write permissions" AND
 #       "Allow GitHub Actions to create and approve pull requests"
-#   - If branch protection on `main` requires status checks, enable
+#   - If branch protection on `master` requires status checks, enable
 #     "Allow auto-merge" in repo settings; this workflow already falls back
 #     to `--auto` merge in that case.
 # ---------------------------------------------------------------------------
@@ -35,7 +35,7 @@ permissions:
   pull-requests: write
 
 env:
-  BASE_BRANCH: main
+  BASE_BRANCH: master
   UPDATE_BRANCH: automated/daily-update
   UPDATE_SCRIPT: ./scripts/update.sh
 
@@ -72,11 +72,13 @@ jobs:
         id: update
         run: |
           set -euo pipefail
-          if [ ! -x "$UPDATE_SCRIPT" ]; then
-            echo "::error::Update script '$UPDATE_SCRIPT' is missing or not executable."
+          if [ ! -f "$UPDATE_SCRIPT" ]; then
+            echo "::error::Update script '$UPDATE_SCRIPT' not found."
             exit 1
           fi
-          "$UPDATE_SCRIPT"
+          # Invoked via bash so a missing +x bit (common when the file is added
+          # through the GitHub web UI) does not break the run.
+          bash "$UPDATE_SCRIPT"
 
       - name: Detect changes
         id: diff
