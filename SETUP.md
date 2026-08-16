@@ -47,3 +47,4 @@ auto-merge, leaving the PR open until checks report. Use a PAT in that case.
 ## Verified
 `actionlint` 1.7.12 + `shellcheck` 0.10.0: clean. Git/PR/merge sequence was
 dry-run end-to-end against a local remote with a stubbed `gh`.
+ 
